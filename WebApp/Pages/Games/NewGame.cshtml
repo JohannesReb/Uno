@@ -1,0 +1,145 @@
+@page
+@using Domain
+@model WebApp.Pages_Games.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>New Game</h1>
+
+<h4>Settings</h4>
+<hr />
+<div>
+    <div>
+        @if (Model.PlayerCount == 0)
+            {
+            <form method="get" href="Games/NewGame">
+                <div>
+                    <h5>How many players?</h5>
+                    <select name="playerCount" id="playerCount" class="btn btn-primary">
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="submit" value="Next" class="btn btn-primary"/>
+                </div>
+                
+            </form>
+            }
+        @if (Model.PlayerCount != 0)
+        {
+            <form method="post" href="Games/NewGame">
+                <div>
+                    <input type="hidden" name="playerCount" value="@Model.PlayerCount"/>
+                    <table>
+                        <tr>
+                            <th>
+                                NickName
+                            </th>
+                            <th>
+                                Type
+                            </th>
+                            <th>
+                                You will join as
+                            </th>
+                        </tr>
+                        @for (int i = 0; i < Model.PlayerCount; i++)
+                        {
+                            <tr>
+                                <td>
+                                    <input type="text" name="@i" id="@i" value="Player_@i"/>
+                                </td>
+                                <td>
+                                    <select name="@(i)type" id="playerType" class="btn btn-primary">
+                                        <option value="Human">Human</option>
+                                        <option value="Ai">AI</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="radio" checked="" name="radio" value="@i"/>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                    <h5>Choose card effects</h5>
+                    <table>
+                        @foreach (ECardValue value in Enum.GetValuesAsUnderlyingType(typeof(ECardValue)))
+                        {
+                            <tr>
+                                <td>
+                                    <label>@value :</label>
+                                </td>
+                                @foreach (ECardEffect effect in Enum.GetValuesAsUnderlyingType(typeof(ECardEffect)))
+                                {
+                                    <td>
+                                        <select id="@effect" name="@value" class="btn btn-primary">
+                                            <option selected=@(Model.State.CardEffects[value].Count(eff => eff == effect) == 0) value="@effect 0">0</option>
+                                            <option selected=@(Model.State.CardEffects[value].Count(eff => eff == effect) == 1) value="@effect 1">1</option>
+                                            <option selected=@(Model.State.CardEffects[value].Count(eff => eff == effect) == 2) value="@effect 2">2</option>
+                                            <option selected=@(Model.State.CardEffects[value].Count(eff => eff == effect) == 3) value="@effect 3">3</option>
+                                            <option selected=@(Model.State.CardEffects[value].Count(eff => eff == effect) == 4) value="@effect 4">4</option>
+                                            <option selected=@(Model.State.CardEffects[value].Count(eff => eff == effect) == 5) value="@effect 5">5</option>
+                                            <option selected=@(Model.State.CardEffects[value].Count(eff => eff == effect) == 6) value="@effect 6">6</option>
+                                        </select>
+                                        <label for="@effect">@effect</label>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                    <br/>
+                    <h5>Choose card properties</h5>
+                    <br/>
+                    <table>
+                        @foreach (ECardValue value in Enum.GetValuesAsUnderlyingType(typeof(ECardValue)))
+                        {
+                            <tr>
+                                <td>
+                                    <label>@value :</label>
+                                </td>
+                                @foreach (ECardProperty property in Enum.GetValuesAsUnderlyingType(typeof(ECardProperty)))
+                                {
+                                    <td>
+                                        <input type="checkbox" id="@property" name="@(value)%prop%" checked=@(Model.State.CardProperties[value].Contains(property)) value="@property">
+                                        <label for="@property">@property</label>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                    <br/>
+                    <h5>Choose Game Rules</h5>
+                    <br/>
+                    <table>
+                        @foreach (EGameRule gameRule in Enum.GetValuesAsUnderlyingType(typeof(EGameRule)))
+                        {
+                            <tr>
+                                <td>
+                                    <input type="checkbox" id="@gameRule" name="gameRule" checked=@(Model.State.GameRules.Contains(gameRule)) value="@gameRule">
+                                    <label for="@gameRule">@gameRule</label>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                    </div>
+                <div>
+                    <input type="submit" value="New Game" class="btn btn-primary"/>
+                </div>
+            </form>
+        }
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

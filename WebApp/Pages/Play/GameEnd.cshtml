@@ -1,0 +1,35 @@
+﻿@page
+@model WebApp.Pages.Play.GameEnd
+
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<div>
+    @{
+        if (Model.Error)
+        {
+            Response.Redirect("/Games/Index");
+            
+        }
+        else if (Model.Winner != null)
+        {
+            <div>Winner is @Model.Winner</div>
+            
+        }
+        else
+        {
+            <div>Game resulted in a draw!</div>
+        }
+        <a asp-page="/Games/Index">Return to games page</a>
+    }
+</div>
+</body>
+</html>

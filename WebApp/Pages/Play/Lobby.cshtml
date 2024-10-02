@@ -1,0 +1,42 @@
+@page
+@model WebApp.Pages.Play.LobbyModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Lobby</title>
+</head>
+<body>
+<div>
+    Players @(Model.Engine.GetPlayerCount()) / @Model.Engine.GetPlayers().Count
+    @foreach (var player in Model.Engine.GetPlayers())
+    {
+        <div>@player.NickName</div>
+    }
+    <form method="post" asp-page-handler="Start">
+        <div>
+            <input type="hidden" asp-for="GameId" value="@Model.GameId"/>
+            <input type="hidden" asp-for="PlayerId" value="@Model.PlayerId"/>
+            <input type="submit" value="Start Game" class="btn btn-primary"/>
+        </div>
+    </form>
+    <form method="post" asp-page-handler="Leave">
+        <div>
+            <input type="hidden" asp-for="GameId" value="@Model.GameId"/>
+            <input type="hidden" asp-for="PlayerId" value="@Model.PlayerId"/>
+            <input type="submit" value="Leave" class="btn btn-primary"/>
+        </div>
+    </form>
+</div>
+</body>
+</html>
+
+@section Scripts
+{
+    <script>
+        setTimeout(() => {
+            window.location.reload()
+            }, 1000*3)
+    </script>
+}

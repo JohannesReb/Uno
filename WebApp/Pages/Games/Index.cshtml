@@ -1,0 +1,57 @@
+@page
+@using Domain
+@model WebApp.Pages_Games.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="NewGame">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Games[0].CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Games[0].UpdatedAt)
+            </th>
+            <th>
+                Players
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Games) {
+        Model.Engine.LoadGame(item.Id);
+        if (Model.Engine.IsGameOver())
+        {
+            Model.Engine.DeleteGameFromDb();
+            break;
+        }
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAt)
+            </td>
+            <td>
+                @(Model.Engine.GetPlayerCount()) - |
+                @foreach (var player in Model.Engine.GetPlayers().Where(p => p.PlayerType.Equals(EPlayerType.Human)))
+                {
+                    <a asp-page="/Play/Index" asp-route-gameId="@item.Id" asp-route-playerId="@player.Id">@player.NickName</a> @(" | ")
+                }
+            </td>
+            <td>
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

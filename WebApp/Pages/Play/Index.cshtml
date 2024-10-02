@@ -1,0 +1,214 @@
+﻿@page
+@model WebApp.Pages.Play.Index
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "UNO";
+}
+
+@{
+    if (Model.Engine.IsGameOver())
+    {
+        Response.Redirect(Model.Engine.GetGameWinner() != null 
+            ? $"GameEnd?winner={Model.Engine.GetActivePlayerName()}&GameId={Model.GameId}"
+            : $"GameEnd?GameId={Model.GameId}");
+    }
+    if (Model.CardName != null || Model.CardColor != null || Model.SwapPlayer != null || Model.HandPlayer != null || Model.Uno)
+    {
+        Response.Redirect($"Play/Index?GameId={Model.GameId}&PlayerId={Model.PlayerId}&Color={Model.Color}&Swap={Model.Swap}");
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Play</title>
+</head>
+<body>
+<div width="100%">
+    <table>
+        <tr>
+            <td>
+                <table>
+                <tr>
+                    <td>
+                        <span>You are: @Model.Engine.GetPlayerNameById(Model.PlayerId)</span>
+                        <br/>
+                        <span>Its @Model.Engine.GetActivePlayerName()'s turn</span>
+                        <br/>
+                        @foreach (var player in Model.Engine.GetPlayers())
+                        {
+                            <div>@Model.Engine.GetPlayerNameById(player.Id) - @player.Cards.Count Cards</div>
+                        }
+                        <br/>
+                        <span>@Model.ErrorMessage</span>
+                        <br/>
+                        <span>Chosen Color: @Model.Engine.GetChosenColor()</span>
+                        <br/>
+                        <span>Last Played:</span>
+                        <br/>
+                        <img alt="@Model.Engine.GetLastPlayedCard()" src="/Images/@(Model.Engine.GetLastPlayedCard().ToString().Replace(" ", "")).png" width="200" height="286"/>
+                    </td>
+                    <td>
+                        <form method="post" asp-page-handler="Uno">
+                            <div>
+                                <input type="hidden" asp-for="GameId" value="@Model.GameId"/>
+                                <input type="hidden" asp-for="PlayerId" value="@Model.PlayerId"/>
+                                <button type="submit"><img type="image" alt="UNO" src="/Images/UNO.png" width="100" height="143"/></button>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @if (Model.Engine.GetHandInMiddle() && !Model.Engine.IsPlayerIdInHandInMiddle(Model.PlayerId))
+                        {
+                            <form method="post" asp-page-handler="Hand">
+                                <div>
+                                    <input type="hidden" asp-for="GameId" value="@Model.GameId"/>
+                                    <input type="hidden" asp-for="PlayerId" value="@Model.PlayerId"/>
+                                    <input type="hidden" asp-for="HandPlayer" value="@Model.PlayerId"/>
+                                    <button type="submit"><img type="image" alt="Hand" src="/Images/Hand.png" width="100" height="143"/></button>
+                                </div>
+                            </form>
+                        }
+                        else if (Model.Swap)
+                        {
+                            <h5>Choose player to swap cards with</h5>
+                            foreach (var player in Model.Engine.GetPlayers().Where(p => p.Id != Model.PlayerId))
+                            {
+                                <form method="post" asp-page-handler="Swap">
+                                    <div>
+                                        <input type="hidden" asp-for="GameId" value="@Model.GameId"/>
+                                        <input type="hidden" asp-for="PlayerId" value="@Model.PlayerId"/>
+                                        <input type="hidden" asp-for="SwapPlayer" value="@player.Id"/>
+                                        <button type="submit" value="|@Model.Engine.GetPlayerNameById(player.Id)|  " class="btn btn-primary"></button>
+                                    </div>
+                                </form>
+                                @* <a asp-page="/Play/Index" *@
+                                @*    asp-route-gameId="@Model.GameId" *@
+                                @*    asp-route-playerId="@Model.PlayerId" *@
+                                @*    asp-route-swapPlayer="@player.Id">|@Model.Engine.GetPlayerNameById(player.Id)|    *@
+                                @* </a> *@
+
+                            }
+                        }
+                        else if (Model.Color)
+                        {
+                            <h5>Choose Color</h5>
+                            <form method="post" asp-page-handler="Color">
+                                <div>
+                                    <input type="hidden" asp-for="GameId" value="@Model.GameId"/>
+                                    <input type="hidden" asp-for="PlayerId" value="@Model.PlayerId"/>
+                                    <input type="hidden" asp-for="CardColor" value="Red"/>
+                                    <button type="submit"><img type="image" alt="Red" src="/Images/RedZero.png" width="100" height="143"/></button>
+                                </div>
+                            </form>
+                            <form method="post" asp-page-handler="Color">
+                                <div>
+                                    <input type="hidden" asp-for="GameId" value="@Model.GameId"/>
+                                    <input type="hidden" asp-for="PlayerId" value="@Model.PlayerId"/>
+                                    <input type="hidden" asp-for="CardColor" value="Green"/>
+                                    <button type="submit"><img type="image" alt="Green" src="/Images/GreenZero.png" width="100" height="143"/></button>
+                                </div>
+                            </form>
+                            <form method="post" asp-page-handler="Color">
+                                <div>
+                                    <input type="hidden" asp-for="GameId" value="@Model.GameId"/>
+                                    <input type="hidden" asp-for="PlayerId" value="@Model.PlayerId"/>
+                                    <input type="hidden" asp-for="CardColor" value="Blue"/>
+                                    <button type="submit"><img type="image" alt="Blue" src="/Images/BlueZero.png" width="100" height="143"/></button>
+                                </div>
+                            </form>
+                            <form method="post" asp-page-handler="Color">
+                                <div>
+                                    <input type="hidden" asp-for="GameId" value="@Model.GameId"/>
+                                    <input type="hidden" asp-for="PlayerId" value="@Model.PlayerId"/>
+                                    <input type="hidden" asp-for="CardColor" value="Yellow"/>
+                                    <button type="submit"><img type="image" alt="Yellow" src="/Images/YellowZero.png" width="100" height="143"/></button>
+                                </div>
+                            </form>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @{
+                            if (Model.PlayerId == Model.Engine.GetActivePlayer().Id && !Model.Color)
+                            {
+                                <span>Its your turn!</span>
+                                <br/>
+                            }
+
+                            <span>Your Cards:</span>
+                            <br/>
+                        }
+                    </td>
+                </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+            <tr>
+
+                @{
+                    @* if (Model.Engine.GameHasRule(EGameRule.PlaySameCardTogether)) *@
+                    @* { *@
+                    @*     <form method="post" asp-page-handler="Play"> *@
+                    @*         <select size="20" asp-for="CardNames" asp-items="Model.CardNames"> *@
+                    @*             $1$ @foreach (var cardName in Model.CardNames) #1# *@
+                    @*             $1$ { #1# *@
+                    @*             $1$     <option selected="" value="@(cardName)">@(cardName) #1# *@
+                    @*             $1$         <img type="image" alt="@cardName" src="/Images/@(cardName).png" width="100" height="143"/> #1# *@
+                    @*             $1$     </option> #1# *@
+                    @*             $1$ } #1# *@
+                    @*         </select> *@
+                    @*         <input type="hidden" asp-for="GameId" value="@Model.GameId"/> *@
+                    @*         <input type="hidden" asp-for="PlayerId" value="@Model.PlayerId"/> *@
+                    @*         <input type="submit" value="Play" class="btn btn-primary"/> *@
+                    @*     </form> *@
+                    @* } *@
+                    // else
+                    {
+                        foreach (var card in Model.Engine.GetPlayers().First(p => p.Id == Model.PlayerId).Cards)
+                        {
+                            <td>
+                                <form method="post" asp-page-handler="Play">
+                                    <div>
+                                        <input type="hidden" asp-for="GameId" value="@Model.GameId"/>
+                                        <input type="hidden" asp-for="PlayerId" value="@Model.PlayerId"/>
+                                        <input type="hidden" asp-for="CardName" value="@(card.ToString().Trim().Replace(" ", ""))"/>
+                                        <button type="submit"><img type="image" alt="@card" src="/Images/@(card.ToString().Replace(" ", "")).png" width="100" height="143"/></button>
+                                    </div>
+                                </form>
+                            </td>
+                            @* <a asp-page="/Play/Index" *@
+                            @*    asp-route-gameId="@Model.GameId" *@
+                            @*    asp-route-playerId="@Model.PlayerId" *@
+                            @*    asp-route-cardName="@(card.ToString().Trim().Replace(" ", ""))"> *@
+                            @*     <img type="image" alt="@card" src="/Images/@(card.ToString().Replace(" ", "")).png" width="100" height="143"/> *@
+                            @* </a> *@
+                        }
+                    }
+                }
+
+            </tr>
+    </table>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
+
+@section Scripts
+{
+    <script>
+        setTimeout(() => {
+            window.location.reload()
+            }, 1000*3)
+    </script>
+}

@@ -1,0 +1,99 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BLL\BLL.csproj" />
+      <ProjectReference Include="..\DAL\DAL.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DAL\DAL.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="wwwroot\Images\BlueZero.png" />
+      <None Include="wwwroot\Images\BlueOne.png" />
+      <None Include="wwwroot\Images\BlueTwo.png" />
+      <None Include="wwwroot\Images\BlueThree.png" />
+      <None Include="wwwroot\Images\BlueFour.png" />
+      <None Include="wwwroot\Images\BlueFive.png" />
+      <None Include="wwwroot\Images\BlueSix.png" />
+      <None Include="wwwroot\Images\BlueSeven.png" />
+      <None Include="wwwroot\Images\BlueEight.png" />
+      <None Include="wwwroot\Images\BlueNine.png" />
+      <None Include="wwwroot\Images\BlueDrawTwo.png" />
+      <None Include="wwwroot\Images\BlueReverse.png" />
+      <None Include="wwwroot\Images\BlueSkip.png" />
+      <None Include="wwwroot\Images\GreenZero.png" />
+      <None Include="wwwroot\Images\GreenOne.png" />
+      <None Include="wwwroot\Images\GreenTwo.png" />
+      <None Include="wwwroot\Images\GreenThree.png" />
+      <None Include="wwwroot\Images\GreenFour.png" />
+      <None Include="wwwroot\Images\GreenFive.png" />
+      <None Include="wwwroot\Images\GreenSix.png" />
+      <None Include="wwwroot\Images\GreenSeven.png" />
+      <None Include="wwwroot\Images\GreenEight.png" />
+      <None Include="wwwroot\Images\GreenNine.png" />
+      <None Include="wwwroot\Images\GreenDrawTwo.png" />
+      <None Include="wwwroot\Images\GreenReverse.png" />
+      <None Include="wwwroot\Images\GreenSkip.png" />
+      <None Include="wwwroot\Images\RedZero.png" />
+      <None Include="wwwroot\Images\RedOne.png" />
+      <None Include="wwwroot\Images\RedTwo.png" />
+      <None Include="wwwroot\Images\RedThree.png" />
+      <None Include="wwwroot\Images\RedFour.png" />
+      <None Include="wwwroot\Images\RedFive.png" />
+      <None Include="wwwroot\Images\RedSix.png" />
+      <None Include="wwwroot\Images\RedSeven.png" />
+      <None Include="wwwroot\Images\RedEight.png" />
+      <None Include="wwwroot\Images\RedNine.png" />
+      <None Include="wwwroot\Images\RedDrawTwo.png" />
+      <None Include="wwwroot\Images\RedReverse.png" />
+      <None Include="wwwroot\Images\RedSkip.png" />
+      <None Include="wwwroot\Images\WildWild.png" />
+      <None Include="wwwroot\Images\WildWildDrawFour.png" />
+      <None Include="wwwroot\Images\YellowZero.png" />
+      <None Include="wwwroot\Images\YellowOne.png" />
+      <None Include="wwwroot\Images\YellowTwo.png" />
+      <None Include="wwwroot\Images\YellowThree.png" />
+      <None Include="wwwroot\Images\YellowFour.png" />
+      <None Include="wwwroot\Images\YellowFive.png" />
+      <None Include="wwwroot\Images\YellowSix.png" />
+      <None Include="wwwroot\Images\YellowSeven.png" />
+      <None Include="wwwroot\Images\YellowEight.png" />
+      <None Include="wwwroot\Images\YellowNine.png" />
+      <None Include="wwwroot\Images\YellowDrawTwo.png" />
+      <None Include="wwwroot\Images\YellowReverse.png" />
+      <None Include="wwwroot\Images\YellowSkip.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\Players\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Players\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Players\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Players\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Players\Index.cshtml" />
+    </ItemGroup>
+</Project>
